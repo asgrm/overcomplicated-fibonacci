@@ -1,18 +1,12 @@
 FROM node:23-alpine as builder
-
-WORKDIR /app
-
+WORKDIR '/app'
 COPY ./package.json ./
 
 RUN npm install
-
 COPY . .
+RUN npm run build
 
-CMD npm run build
-
-#run phase
 FROM nginx
-EXPOSE 80
-
+EXPOSE 3000
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/build /usr/share/nginx/html
